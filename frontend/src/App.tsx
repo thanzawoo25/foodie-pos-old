@@ -11,11 +11,26 @@ function App() {
   console.log("App Component",accessToken)
   useEffect(() => {
     fetchData()
+    MenuCategories()
   }, []);
+
   const fetchData =async () => {
-    const response = await fetch("http://localhost:5000/menus");
+    const response = await fetch("http://localhost:5000/menus", {
+      headers: {
+        Authorization :`Bearer ${accessToken}`
+      }
+    });
     console.log(await response.json())
   }
+  const MenuCategories =async () => {
+    const response = await fetch("http://localhost:5000/menu-categories", {
+      headers: {
+        Authorization :`Bearer ${accessToken}`
+      }
+    });
+    console.log(await response.json())
+  }
+
   return (
     <Layout>
        <div className="App">

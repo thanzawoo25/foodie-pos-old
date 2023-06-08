@@ -23,7 +23,7 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 import ClassIcon from "@mui/icons-material/Class";
 import CategoryIcon from "@mui/icons-material/Category";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // add to NavBar.tsx
 
@@ -53,6 +53,8 @@ const sidebarMenuItems = [
 ];
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken")
   const [open,setOpen]=useState(false)
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -135,38 +137,25 @@ const NavBar = () => {
           <Typography variant="h4" component="div" sx={{ flexGrow: 1,textAlign:"center" }}>
             FOODIE POS
           </Typography>
-          {auth && (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
-          )}
+
+          {accessToken ?<Typography variant="h6" component="div"
+            sx={{ cursor: "pointer", userSelect: "none" }}
+            onClick={() => {
+              localStorage.removeItem("accessToken")
+              navigate("/logout")
+            }}
+          >
+            Log Out
+          </Typography> : <Typography variant="h6" component="div"
+            sx={{ cursor: "pointer", userSelect: "none" }}
+            onClick={() => {
+              navigate("/login")
+            }}
+          >
+            {window.location.pathname === "/login" ? "": "Login"}
+          </Typography>
+          }
+          
         </Toolbar>
       </AppBar>
       <Box>
