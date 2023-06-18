@@ -5,13 +5,13 @@ import NavBar from './components/NavBar';
 import Register from './components/Register';
 import { Box, Typography } from '@mui/material';
 import Layout from './Layout';
+import zIndex from '@mui/material/styles/zIndex';
 
 function App() {
   const accessToken = localStorage.getItem("accessToken");
   console.log("App Component",accessToken)
   useEffect(() => {
     fetchData()
-    MenuCategories()
   }, []);
 
   const fetchData =async () => {
@@ -22,14 +22,7 @@ function App() {
     });
     console.log(await response.json())
   }
-  const MenuCategories =async () => {
-    const response = await fetch("http://localhost:5000/menu-categories", {
-      headers: {
-        Authorization :`Bearer ${accessToken}`
-      }
-    });
-    console.log(await response.json())
-  }
+  
 
   return (
     <Layout>
@@ -46,3 +39,4 @@ function App() {
 }
 
 export default App;
+
