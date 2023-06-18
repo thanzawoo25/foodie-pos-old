@@ -8,11 +8,11 @@ import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 
 
-authRouter.post("/register", async (req:Request, res:Response) => {
+authRouter.post("/register", async (request:Request, response:Response) => {
     // console.log(req.body)
     // res.send(req.body)
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) return res.sendStatus(400)
+    const { name, email, password } = request.body;
+    if (!name || !email || !password) return response.sendStatus(400)
     const hashedPassword = await bcrypt.hash(password, 10)
     
     try {
@@ -79,11 +79,11 @@ authRouter.post("/register", async (req:Request, res:Response) => {
             `insert into addons (name,price,addon_categories_id ) values ('Cocacola',50,${defaultAddonCategoryId1}),('Pepsi',50,${defaultAddonCategoryId1}) 
             ('Large',30,${defaultAddonCategoryId2}),('Nomal',0,${defaultAddonCategoryId2})`
         )
-        res.send(user)
+        response.send(user)
 
     } catch (error) {
         console.log(error)
-        res.sendStatus(500)
+        response.sendStatus(500)
     }
 
     // const text = 'INSERT INTO users(name, email,password) VALUES($1, $2,$3) RETURNING *'

@@ -33,7 +33,7 @@ export const defaultContext: AppContextType ={
     menuLocations: [],
     company:null,
     updateData:() => { },
-        fetchData:()=>{}
+    fetchData:()=>{}
     
 }
 
@@ -51,7 +51,7 @@ const AppProvider = (props: any) => {
         }
     },[accessToken])
 
-    const fetchData =async () => {
+    const fetchData = async () => {
         console.log(config)
         const response = await fetch(`${config.apiBaseUrl}`, {
             headers: {
@@ -60,7 +60,27 @@ const AppProvider = (props: any) => {
 
         })
         const responseJson = await response.json()
-        console.log(responseJson)
+        console.log("Data from server", responseJson);
+
+        const {
+            menus,
+            menuCategories,
+            addons,
+            addonCategories,
+            locations,
+            menuLocations,
+            company
+        } = responseJson;
+        updateData({
+            ...data,
+            menus: menus,
+            menuCategories,
+            addons,
+            addonCategories,
+            locations,
+            menuLocations,
+            company
+        })
     }
 
     return (

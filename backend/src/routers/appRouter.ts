@@ -1,10 +1,9 @@
 
-import express,{Request,Response, response} from "express";
-import { request } from "http";
-import { checkAuth } from "../../utils/Auth";
+import express,{Request,Response, response} from "express"; 
 import { db } from "../db/db";
-
+import checkAuth from "../../utils/auth";
 const appRouter = express.Router()
+
 
 appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     //@ts-ignore
@@ -33,7 +32,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
         const locationIds = locations.rows.map(row => row.id);
 
         const menuLocations = await db.query(
-            `select * from menus_locations where locations_id = $1`,
+            `select * from menus_locations where locations_id = ANY($1::int[])`,
             [locationIds]
         )
 
@@ -49,18 +48,16 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
         //get menu categories ids and rows
 
         const menuMenuCategoriesResult = await db.query(
-            `select * from menus_menu_categores where id menus_id = ANY($1::int[])`,
+            `select * from menus_menu_categories where id menus_id = ANY($1::int[])`,
             [menuIds]
         )     
-        const menuCategoryIds = menuMenuCategoriesResult.rows.map(row => row.menu_categores_id);
+        const menuCategoryIds = menuMenuCategoriesResult.rows.map(row => row.menu_categories_id);
         
         const menuCategoriesResult = await db.query(
             `select * from menu_categories where id = ANY($1::int[])`,
             [menuCategoryIds],
         );
         
-
-
         //get addon categories
 
         const menuAddonCategoriesResult = await db.query(

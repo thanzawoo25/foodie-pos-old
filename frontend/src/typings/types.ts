@@ -8,7 +8,7 @@ export interface Menu extends BaseType{
     price: number
     locationIds: number[],
     description?: string
-    assetUrl: string
+    assetUrl?: string
     isAvailable?:boolean
 }
 
@@ -26,8 +26,8 @@ export interface AddonCategory extends BaseType{
 }
 
 export interface Location extends BaseType{
-    companyId?:number
-    address?:number
+    companyId?:string
+    address?:string
 }
 
 export interface MenuLocation {

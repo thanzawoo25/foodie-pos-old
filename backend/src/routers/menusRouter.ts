@@ -1,14 +1,13 @@
 
-import express, { Request, Response } from "express";
+import express, { Request, Response, response } from "express";
 import { db } from "../db/db";
-import { checkAuth } from "../../utils/Auth";
-
+import checkAuth from "../../utils/auth";
 const menusRouter = express.Router();
 
 
-menusRouter.get("/",checkAuth, async (req: Request, res: Response) => {
+menusRouter.get("/",checkAuth, async (request: Request, response: Response) => {
     const menuResult = await db.query("select * from menus");
-    res.send(menuResult.rows)
+    response.send(menuResult.rows)
 })
 
 // app.get("/menu-categories", async (req: Request, res: Response) => {
