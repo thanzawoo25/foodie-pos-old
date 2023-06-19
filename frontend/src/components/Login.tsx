@@ -34,14 +34,14 @@ const Login = () => {
         >
             <TextField
                 sx={{my:2}}
-            id="outlined-basic" 
+            
             placeholder="Email "
                 variant="outlined"
                 onChange={(event)=>setUser({...user,email:event.target.value})}
             />
 
             <TextField
-                id="outlined-basic" 
+                
                 type="password"
             placeholder="Password"
                 variant="outlined"

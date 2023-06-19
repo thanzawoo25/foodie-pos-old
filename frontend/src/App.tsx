@@ -5,7 +5,6 @@ import NavBar from './components/NavBar';
 import Register from './components/Register';
 import { Box, Typography } from '@mui/material';
 import Layout from './Layout';
-import zIndex from '@mui/material/styles/zIndex';
 
 function App() {
   const accessToken = localStorage.getItem("accessToken");
@@ -15,7 +14,7 @@ function App() {
   }, []);
 
   const fetchData =async () => {
-    const response = await fetch("http://localhost:5000/menus", {
+    const response = await fetch("http://localhost:5000/", {
       headers: {
         Authorization :`Bearer ${accessToken}`
       }

@@ -10,7 +10,7 @@ import { config } from "../src/config/config";
         const token = authorization.split(" ")[1]
     const user = jwt.verify(token, config.jwtSecret)
     
-    //@ts-ignore
+     //@ts-ignore
     request["email"] = user.email;
     next()
     } catch (error) {

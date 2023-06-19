@@ -48,7 +48,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
         //get menu categories ids and rows
 
         const menuMenuCategoriesResult = await db.query(
-            `select * from menus_menu_categories where id menus_id = ANY($1::int[])`,
+            `select * from menus_menu_categories where menus_id = ANY($1::int[])`,
             [menuIds]
         )     
         const menuCategoryIds = menuMenuCategoriesResult.rows.map(row => row.menu_categories_id);
