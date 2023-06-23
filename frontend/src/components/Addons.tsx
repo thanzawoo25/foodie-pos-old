@@ -1,14 +1,15 @@
 import { Box } from "@mui/material";
 import NavBar from "./NavBar";
+import Layout from "../Layout";
 
 
 const Addons = () => {
     
     return (
-        <Box>
-            <NavBar />
+        <Layout title="Addons">
+            
             <h1>Addons Bar</h1>
-        </Box>
+        </Layout>
     )
 }
 

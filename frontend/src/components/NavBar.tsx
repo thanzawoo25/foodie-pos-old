@@ -28,7 +28,7 @@ import { Link, useNavigate } from 'react-router-dom';
 // add to NavBar.tsx
 
 const sidebarMenuItems = [
-  { id: 1, label: "Orders", icon: <LocalMallIcon />, route: "/orders" },
+  { id: 1, label: "Orders", icon: <LocalMallIcon />, route: "/" },
   { id: 2, label: "Menus", icon: <LocalDiningIcon />, route: "/menus" },
   {
     id: 3,
@@ -52,12 +52,17 @@ const sidebarMenuItems = [
   { id: 7, label: "Settings", icon: <SettingsIcon />, route: "/settings" },
 ];
 
-const NavBar = () => {
+interface Props{
+  title?:string
+}
+
+const NavBar = ({title}:Props) => {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken")
   const [open,setOpen]=useState(false)
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const navBarTitle = title ?`FOODIE-POS - ${title}` : `FOODIE POS`
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -135,7 +140,7 @@ const NavBar = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1,textAlign:"center" }}>
-            FOODIE POS
+            {navBarTitle}
           </Typography>
 
           {accessToken ?<Typography variant="h6" component="div"

@@ -1,14 +1,15 @@
 import { Box } from "@mui/material";
 import NavBar from "./NavBar";
+import Layout from "../Layout";
 
 
 const Orders = () => {
     
     return (
-        <Box>
-            <NavBar />
+        <Layout title="Orders">
+            
             <h1>Orders Bar</h1>
-        </Box>
+        </Layout>
     )
 }
 

@@ -116,6 +116,8 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     const companiesResult = await db.query(
       "insert into  companies (name) values ($1) returning *",
       ["Default company"]
+
+
     );
     // console.log(companiesResult.rows);
     const companiesId = companiesResult.rows[0].id;
@@ -206,6 +208,8 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     res.sendStatus(500);
   }
 });
+
+
 authRouter.post("/login", async (req: Request, res: Response) => {
     
     const { email, password } = req.body;

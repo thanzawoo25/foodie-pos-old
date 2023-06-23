@@ -45,6 +45,7 @@ const AppProvider = (props: any) => {
     const accessToken = localStorage.getItem("accessToken");
     console.log("AccessToken", accessToken)
     
+
     useEffect(() => {
         if (accessToken) {
             fetchData()
@@ -83,6 +84,7 @@ const AppProvider = (props: any) => {
         })
     }
 
+    
     return (
         <AppContext.Provider value={{...data,updateData,fetchData}}>
             {props.children}

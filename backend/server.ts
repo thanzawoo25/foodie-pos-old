@@ -8,6 +8,7 @@ import { config } from "./src/config/config";
 import authRouter from "./src/routers/authRouter";
 import menusRouter from "./src/routers/menusRouter";
 import appRouter from "./src/routers/appRouter";
+import locationsRouter from "./src/routers/locationsRouter";
 console.log(config.jwtSecret)
 
 
@@ -20,7 +21,8 @@ app.use(express.json());
 
 app.use("/",appRouter)
 app.use("/auth", authRouter)
-app.use("/menus",menusRouter)
+app.use("/menus", menusRouter)
+app.use("/locations",locationsRouter)
 
 
 app.listen(port, () => {
