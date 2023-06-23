@@ -10,10 +10,12 @@ locationsRouter.put("/",checkAuth, async (request: Request, response: Response) 
     response.send(menuResult.rows)
 })
 
-locationsRouter.post("/",checkAuth, async (request: Request, response: Response) => {
+locationsRouter.post("/", checkAuth, async (request: Request, response: Response) => {
+    console.log(request.body)
+    
     const { name, address, companyId } = request.body
     const isValid = name && address && companyId;
-    if (!isValid) return response.send(400)
+    if (!isValid) return response.send(400);
     
     await db.query(
         "insert into locations(name,address,companies_id) values($1,$2,$3)",

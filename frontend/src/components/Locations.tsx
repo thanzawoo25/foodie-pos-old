@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import NavBar from "./NavBar";
 import Layout from "../Layout";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
 import { config } from "../config/config";
 
@@ -13,10 +13,15 @@ const Locations = () => {
   const [newLocation, setNewLocation] = useState({ name: "", address: "", companyId: company?.id })
   const accessToken = localStorage.getItem("accessToken");
   
-
+  useEffect(() => {
+    company?.id && setNewLocation({...newLocation,companyId:company.id})
+  }, [company])
+  
   const createNewLocation = async () => {
-     console.log(newLocation)
-     await fetch(`${config.apiBaseUrl}/locations`, {
+    console.log(newLocation)
+    
+    await fetch(`${config.apiBaseUrl}/locations`, {
+       
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -26,7 +31,7 @@ const Locations = () => {
     })
    
     fetchData();
-    setNewLocation({name:"",address:"",companyId:company?.id})
+     setNewLocation({name:"",address:"",companyId:company?.id})
   }
 
 
