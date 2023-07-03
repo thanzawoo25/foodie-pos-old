@@ -2,6 +2,7 @@
 import express,{Request,Response, response} from "express"; 
 import { db } from "../db/db";
 import checkAuth from "../../utils/auth";
+import { fileUpload } from "../../utils/fileUpload";
 const appRouter = express.Router()
 
 
@@ -102,6 +103,25 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     }
     
     
+})
+
+appRouter.post("/assets", (request: Request, response: Response) => {
+    try {
+        fileUpload(request, response, async (error) => {
+            console.log("Hello",request.body)
+            if (error) {
+            console.log(error)
+            return response.sendStatus(500)
+        }
+        const files = request.files as Express.MulterS3.File[];
+        const file = files[0];
+        const assetUrl = file.location;
+        response.send({assetUrl})
+    })
+    } catch (error) {
+        console.log(error);
+        response.sendStatus(500)
+    }
 })
 
 export default appRouter;
