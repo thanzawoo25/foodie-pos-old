@@ -1,20 +1,25 @@
-
-
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import { Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { useState } from 'react';
-
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import {
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { useState } from "react";
 
 import LunchDiningIcon from "@mui/icons-material/LunchDining";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
@@ -23,7 +28,8 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 import ClassIcon from "@mui/icons-material/Class";
 import CategoryIcon from "@mui/icons-material/Category";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import TableBarIcon from "@mui/icons-material/TableBar";
 
 // add to NavBar.tsx
 
@@ -45,24 +51,30 @@ const sidebarMenuItems = [
   },
   {
     id: 6,
+    label: "Tables",
+    icon: <TableBarIcon />,
+    route: "/tables",
+  },
+  {
+    id: 7,
     label: "Locations",
     icon: <LocationOnIcon />,
     route: "/locations",
   },
-  { id: 7, label: "Settings", icon: <SettingsIcon />, route: "/settings" },
+  { id: 8, label: "Settings", icon: <SettingsIcon />, route: "/settings" },
 ];
 
-interface Props{
-  title?:string
+interface Props {
+  title?: string;
 }
 
-const NavBar = ({title}:Props) => {
+const NavBar = ({ title }: Props) => {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken")
-  const [open,setOpen]=useState(false)
+  const accessToken = localStorage.getItem("accessToken");
+  const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const navBarTitle = title ?`FOODIE-POS - ${title}` : `FOODIE POS`
+  const navBarTitle = title ? `FOODIE-POS - ${title}` : `FOODIE POS`;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -75,49 +87,44 @@ const NavBar = ({title}:Props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
   const renderDrawer = () => (
     <Box
-      sx={{ width:  250 }}
+      sx={{ width: 250 }}
       role="presentation"
-      onClick={()=>setOpen(false)}
-      onKeyDown={()=>setOpen(false)}
+      onClick={() => setOpen(false)}
+      onKeyDown={() => setOpen(false)}
     >
       <List>
-        {sidebarMenuItems.slice(0,6).map(menuItem => (
+        {sidebarMenuItems.slice(0, 7).map((menuItem) => (
           <Link
             to={menuItem.route}
             key={menuItem.id}
-            style={{ textDecoration:"none",color:"black"}}
-
+            style={{ textDecoration: "none", color: "black" }}
           >
             <ListItem key={menuItem.id} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {menuItem.icon}
-              </ListItemIcon>
-              <ListItemText primary={menuItem.label} />
-            </ListItemButton>
-          </ListItem>
+              <ListItemButton>
+                <ListItemIcon>{menuItem.icon}</ListItemIcon>
+                <ListItemText primary={menuItem.label} />
+              </ListItemButton>
+            </ListItem>
           </Link>
         ))}
       </List>
       <Divider />
       <List>
-        {sidebarMenuItems.slice(-1).map(menuItem => (
+        {sidebarMenuItems.slice(-1).map((menuItem) => (
           <Link
             to={menuItem.route}
             key={menuItem.id}
-            style={{ textDecoration:"none",color:"black"}}
+            style={{ textDecoration: "none", color: "black" }}
           >
             <ListItem key={menuItem.id} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {menuItem.icon}
-              </ListItemIcon>
-              <ListItemText primary={menuItem.label} />
-            </ListItemButton>
-          </ListItem>
+              <ListItemButton>
+                <ListItemIcon>{menuItem.icon}</ListItemIcon>
+                <ListItemText primary={menuItem.label} />
+              </ListItemButton>
+            </ListItem>
           </Link>
         ))}
       </List>
@@ -126,7 +133,6 @@ const NavBar = ({title}:Props) => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -135,47 +141,52 @@ const NavBar = ({title}:Props) => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={()=>setOpen(true)}
+            onClick={() => setOpen(true)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h4" component="div" sx={{ flexGrow: 1,textAlign:"center" }}>
+          <Typography
+            variant="h4"
+            component="div"
+            sx={{ flexGrow: 1, textAlign: "center" }}
+          >
             {navBarTitle}
           </Typography>
 
-          {accessToken ?<Typography variant="h6" component="div"
-            sx={{ cursor: "pointer", userSelect: "none" }}
-            onClick={() => {
-              localStorage.removeItem("accessToken")
-              navigate("/logout")
-            }}
-          >
-            Log Out
-          </Typography> : <Typography variant="h6" component="div"
-            sx={{ cursor: "pointer", userSelect: "none" }}
-            onClick={() => {
-              navigate("/login")
-            }}
-          >
-            {window.location.pathname === "/login" ? "": "Login"}
-          </Typography>
-          }
-          
+          {accessToken ? (
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ cursor: "pointer", userSelect: "none" }}
+              onClick={() => {
+                localStorage.removeItem("accessToken");
+                navigate("/logout");
+              }}
+            >
+              Log Out
+            </Typography>
+          ) : (
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ cursor: "pointer", userSelect: "none" }}
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              {window.location.pathname === "/login" ? "" : "Login"}
+            </Typography>
+          )}
         </Toolbar>
       </AppBar>
       <Box>
-       
-          <Drawer
-            open={open}
-            onClose={()=>setOpen(false)}
-          >
+        <Drawer open={open} onClose={() => setOpen(false)}>
           {renderDrawer()}
           {/* {<h1>Dreawer</h1>} */}
-          </Drawer>
-      
+        </Drawer>
       </Box>
     </Box>
   );
-}
+};
 
 export default NavBar;

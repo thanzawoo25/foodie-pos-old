@@ -1,129 +1,126 @@
-
-import express,{Request,Response, response} from "express"; 
+import express, { Request, Response, response } from "express";
 import { db } from "../db/db";
 import checkAuth from "../../utils/auth";
 import { fileUpload } from "../../utils/fileUpload";
-const appRouter = express.Router()
-
+const appRouter = express.Router();
 
 appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
-    //@ts-ignore
-    const userEmail = request.email;
-    
-    try {
-        //get user rows
-        const userResult = await db.query(`select * from users where email = $1`, [
-        
-        userEmail
+  //@ts-ignore
+  const userEmail = request.email;
+
+  try {
+    //get user rows
+    const userResult = await db.query(`select * from users where email = $1`, [
+      userEmail,
     ]);
 
     //get company rows and id
-        const companyId = userResult.rows[0].companies_id;
-        const companiesResult = await db.query(
-            `select * from companies where id = $1`,
-            [companyId]
-        )
+    const companyId = userResult.rows[0].companies_id;
+    const companiesResult = await db.query(
+      `select * from companies where id = $1`,
+      [companyId]
+    );
 
-        //get locations rows and id
+    //get locations rows and id
 
-        const locations = await db.query(
-            `select * from locations where companies_id =$1`,
-            [companyId]
-        ) 
-        const locationIds = locations.rows.map(row => row.id);
+    const locations = await db.query(
+      `select * from locations where companies_id =$1`,
+      [companyId]
+    );
+    const locationIds = locations.rows.map((row) => row.id);
 
-        const menuLocations = await db.query(
-            `select * from menus_locations where locations_id = ANY($1::int[])`,
-            [locationIds]
-        )
+    const menusMenuCategoriesLocations = await db.query(
+      `select * from menus_menu_categories_locations where locations_id = ANY($1::int[])`,
+      [locationIds]
+    );
 
-        //get menu row and id
+    //get menu row and id
 
-        const menuIds = menuLocations.rows.map((row) => row.menus_id);
-        const menus = await db.query(
-            `select * from menus where id = ANY($1::int[])`,
-            [menuIds]
-        ) 
-        console.log(menuIds)
+    const menuIds = menusMenuCategoriesLocations.rows.map(
+      (row) => row.menus_id
+    );
+    const menus = await db.query(
+      `select * from menus where id = ANY($1::int[])`,
+      [menuIds]
+    );
+    console.log(menuIds);
 
-        //get menu categories ids and rows
+    //get menu categories ids and rows
 
-        const menuMenuCategoriesResult = await db.query(
-            `select * from menus_menu_categories where menus_id = ANY($1::int[])`,
-            [menuIds]
-        )     
-        const menuCategoryIds = menuMenuCategoriesResult.rows.map(row => row.menu_categories_id);
-        
-        const menuCategoriesResult = await db.query(
-            `select * from menu_categories where id = ANY($1::int[])`,
-            [menuCategoryIds],
-        );
-        
-        //get addon categories
+    const menuCategoryIds = menusMenuCategoriesLocations.rows.map(
+      (row) => row.menu_categories_id
+    );
 
-        const menuAddonCategoriesResult = await db.query(
-            `select * from menus_addon_categories where menus_id = ANY($1::int[])`,
-            [menuIds]
-        )
-        const addonCategoryIds = menuAddonCategoriesResult.rows.map(
-            (row) => row.addon_categories_id
-        );
+    const menuCategoriesResult = await db.query(
+      `select * from menu_categories where id = ANY($1::int[])`,
+      [menuCategoryIds]
+    );
 
-        //addon
-        const addonCategories = await db.query(
-            `select * from addon_categories where id =ANY($1::int[])`,
-            [addonCategoryIds]
-        );
+    //get addon categories
 
-        const addons = await db.query(
-            `select * from addons where addon_categories_id = ANY($1::int[])`,
-            [addonCategoryIds]
-        )
+    const menuAddonCategoriesResult = await db.query(
+      `select * from menus_addon_categories where menus_id = ANY($1::int[])`,
+      [menuIds]
+    );
+    const addonCategoryIds = menuAddonCategoriesResult.rows.map(
+      (row) => row.addon_categories_id
+    );
 
-        const companyResult = await db.query(
-            `select * from companies where id=$1`,
-            [companyId]
-        )
+    //addon
+    const addonCategories = await db.query(
+      `select * from addon_categories where id =ANY($1::int[])`,
+      [addonCategoryIds]
+    );
 
-        const company = companiesResult.rows[0]
+    const addons = await db.query(
+      `select * from addons where addon_categories_id = ANY($1::int[])`,
+      [addonCategoryIds]
+    );
 
-        response.send({
-            menus: menus.rows,
-            menuCategories: menuCategoriesResult.rows,
-            addons: addons.rows,
-            addonCategories: addonCategories.rows,
-            locations: locations.rows,
-            menuLocations: menuLocations.rows,
-            company
-        })
-        
-    } catch (error) {
-        console.log("Error", error);
-        response.sendStatus(500)
-    }
-    
-    
-})
+    const companyResult = await db.query(
+      `select * from companies where id=$1`,
+      [companyId]
+    );
+
+    const company = companiesResult.rows[0];
+    const tableResult = await db.query(
+      `select * from tables where locations_id = ANY($1::int[])`,
+      [locationIds]
+    );
+
+    response.send({
+      menus: menus.rows,
+      menuCategories: menuCategoriesResult.rows,
+      addons: addons.rows,
+      addonCategories: addonCategories.rows,
+      locations: locations.rows,
+      menusMenuCategoriesLocations: menusMenuCategoriesLocations.rows,
+      company,
+      tables: tableResult.rows,
+    });
+  } catch (error) {
+    console.log("Error", error);
+    response.sendStatus(500);
+  }
+});
 
 appRouter.post("/assets", (request: Request, response: Response) => {
-    try {
-        fileUpload(request, response, async (error) => {
-            console.log("Hello",request.body)
-            if (error) {
-            console.log(error)
-            return response.sendStatus(500)
-        }
-        const files = request.files as Express.MulterS3.File[];
-        const file = files[0];
-        const assetUrl = file.location;
-        response.send({assetUrl})
-    })
-    } catch (error) {
+  try {
+    fileUpload(request, response, async (error) => {
+      console.log("Hello", request.body);
+      if (error) {
         console.log(error);
-        response.sendStatus(500)
-    }
-})
+        return response.sendStatus(500);
+      }
+      const files = request.files as Express.MulterS3.File[];
+      const file = files[0];
+      const assetUrl = file.location;
+      response.send({ assetUrl });
+    });
+  } catch (error) {
+    console.log(error);
+    response.sendStatus(500);
+  }
+});
 
 export default appRouter;
-
-
