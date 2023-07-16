@@ -1,26 +1,51 @@
 import NavBar from "./NavBar";
 import Layout from "../Layout";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Autocomplete from "./Autocomplete";
+import { useContext } from "react";
+import { AppContext } from "../contexts/AppContext";
+import {
+  getMenuCategoriesByLocationIds,
+  getSelectedLocationId,
+} from "../Utils";
 
 const MenuCategories = () => {
-  const textMenu = [
-    { id: 36, name: "mote-tee" },
-    { id: 37, name: "shwe yin aye" },
-    { id: 38, name: "lat phet tote" },
-    { id: 39, name: "bane mote" },
-  ];
+  const { menuCategories, menusMenuCategoriesLocations } =
+    useContext(AppContext);
+
+  const validMenuCategories = getMenuCategoriesByLocationIds(
+    menuCategories,
+    menusMenuCategoriesLocations
+  );
+
   return (
     <Layout title="Menu Categories">
       <Box
         sx={{
+          pl: 3,
+          pt: 5,
           display: "flex",
-          flexDirection: "column",
-          textAlign: "center",
         }}
       >
-        <h1>MenuCategories Bar</h1>
-        <Autocomplete options={textMenu} defaultValue={textMenu} />
+        {validMenuCategories.map((item) => {
+          return (
+            <Box
+              key={item.id}
+              sx={{
+                border: "2px solid lightgrey",
+                borderRadius: 3,
+                mr: 2,
+                height: 150,
+                width: 100,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography>{item.name}</Typography>
+            </Box>
+          );
+        })}
       </Box>
     </Layout>
   );

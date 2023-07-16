@@ -35,20 +35,22 @@ import TableBarIcon from "@mui/icons-material/TableBar";
 
 const sidebarMenuItems = [
   { id: 1, label: "Orders", icon: <LocalMallIcon />, route: "/" },
-  { id: 2, label: "Menus", icon: <LocalDiningIcon />, route: "/menus" },
   {
-    id: 3,
+    id: 2,
     label: "Menu Categories",
     icon: <CategoryIcon />,
     route: "/menu-categories",
   },
-  { id: 4, label: "Addons", icon: <LunchDiningIcon />, route: "/addons" },
+
+  { id: 3, label: "Menus", icon: <LocalDiningIcon />, route: "/menus" },
   {
-    id: 5,
+    id: 4,
     label: "Addon Categories",
     icon: <ClassIcon />,
     route: "/addon-categories",
   },
+  { id: 5, label: "Addons", icon: <LunchDiningIcon />, route: "/addons" },
+
   {
     id: 6,
     label: "Tables",

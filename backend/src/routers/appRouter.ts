@@ -58,11 +58,11 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
 
     //get addon categories
 
-    const menuAddonCategoriesResult = await db.query(
+    const menusAddonCategoriesResult = await db.query(
       `select * from menus_addon_categories where menus_id = ANY($1::int[])`,
       [menuIds]
     );
-    const addonCategoryIds = menuAddonCategoriesResult.rows.map(
+    const addonCategoryIds = menusAddonCategoriesResult.rows.map(
       (row) => row.addon_categories_id
     );
 
@@ -94,6 +94,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
       addons: addons.rows,
       addonCategories: addonCategories.rows,
       locations: locations.rows,
+      menuAddonCategories: menusAddonCategoriesResult.rows,
       menusMenuCategoriesLocations: menusMenuCategoriesLocations.rows,
       company,
       tables: tableResult.rows,

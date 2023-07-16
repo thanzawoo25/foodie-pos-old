@@ -5,11 +5,12 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Typography,
 } from "@mui/material";
 import Layout from "../Layout";
 import { useContext, useState } from "react";
 import { config } from "../config/config";
-import { getAccessToken, getSelectedLocationId } from "../Utils/general";
+import { getAccessToken, getSelectedLocationId } from "../Utils";
 import { AppContext } from "../contexts/AppContext";
 import { isValidDateValue } from "@testing-library/user-event/dist/utils";
 
@@ -35,6 +36,7 @@ const Tables = () => {
         locationId: selectedLocationId,
       }),
     });
+    fetchData();
 
     setOpen(false);
   };
@@ -50,26 +52,26 @@ const Tables = () => {
         <Box
           sx={{
             display: "flex",
-            mt: 5,
+            flexWrap: "wrap",
+            justifyContent: "space-around",
           }}
         >
           {isValidTables.map((table) => {
             return (
               <Box
-                key={table.name}
+                key={table.id}
                 sx={{
-                  boxShadow: 4,
-                  width: "8rem",
-                  height: "5rem",
-                  p: 1,
-                  m: 1,
-                  borderRadius: 3,
-                  textAlign: "center",
-                  fontSize: "1.5rem",
-                  fontWeight: "700",
+                  height: 200,
+                  width: 200,
+                  border: "2px solid lightgrey",
+                  borderRadius: 5,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  mt: 3,
                 }}
               >
-                {table.name}
+                <Typography>{table.name}</Typography>
               </Box>
             );
           })}

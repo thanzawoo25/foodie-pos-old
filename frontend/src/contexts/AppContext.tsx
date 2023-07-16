@@ -5,9 +5,10 @@ import {
   Menu,
   MenuCategory,
   Location,
-  MenuLocation,
   Company,
   Tables,
+  MenusMenuCategoriesLocations,
+  MenuAddonCategory,
 } from "../typings/types";
 import { config } from "../config/config";
 
@@ -17,7 +18,8 @@ interface AppContextType {
   addons: Addon[];
   addonCategories: AddonCategory[];
   locations: Location[];
-  menusMenuCategoriesLocations: MenuLocation[];
+  menuAddonCategories: MenuAddonCategory[];
+  menusMenuCategoriesLocations: MenusMenuCategoriesLocations[];
   company: Company | null;
   tables: Tables[];
   updateData: (value: any) => void;
@@ -30,6 +32,7 @@ export const defaultContext: AppContextType = {
   addons: [],
   addonCategories: [],
   locations: [],
+  menuAddonCategories: [],
   menusMenuCategoriesLocations: [],
   company: null,
   tables: [],
@@ -42,7 +45,6 @@ export const AppContext = createContext<AppContextType>(defaultContext);
 const AppProvider = (props: any) => {
   const [data, updateData] = useState(defaultContext);
   const accessToken = localStorage.getItem("accessToken");
-  console.log("AccessToken", accessToken);
 
   useEffect(() => {
     if (accessToken) {
@@ -58,7 +60,6 @@ const AppProvider = (props: any) => {
       },
     });
     const responseJson = await response.json();
-    console.log("Data from server", responseJson);
 
     const {
       menus,
@@ -66,6 +67,7 @@ const AppProvider = (props: any) => {
       addons,
       addonCategories,
       locations,
+      menuAddonCategories,
       menusMenuCategoriesLocations,
       company,
       tables,
@@ -77,6 +79,7 @@ const AppProvider = (props: any) => {
       addons,
       addonCategories,
       locations,
+      menuAddonCategories,
       menusMenuCategoriesLocations,
       company,
       tables,
