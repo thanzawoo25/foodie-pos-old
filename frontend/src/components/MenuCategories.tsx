@@ -4,10 +4,8 @@ import { Box, Typography } from "@mui/material";
 import Autocomplete from "./Autocomplete";
 import { useContext } from "react";
 import { AppContext } from "../contexts/AppContext";
-import {
-  getMenuCategoriesByLocationIds,
-  getSelectedLocationId,
-} from "../Utils";
+import { getMenuCategoriesByLocationIds } from "../Utils";
+import { Link } from "react-router-dom";
 
 const MenuCategories = () => {
   const { menuCategories, menusMenuCategoriesLocations } =
@@ -29,21 +27,28 @@ const MenuCategories = () => {
       >
         {validMenuCategories.map((item) => {
           return (
-            <Box
+            <Link
+              to={`${item.id}`}
               key={item.id}
-              sx={{
-                border: "2px solid lightgrey",
-                borderRadius: 3,
-                mr: 2,
-                height: 150,
-                width: 100,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              style={{ textDecoration: "none" }}
             >
-              <Typography>{item.name}</Typography>
-            </Box>
+              <Box
+                sx={{
+                  border: "2px solid lightgrey",
+                  borderRadius: 3,
+                  mr: 2,
+                  height: 150,
+                  width: 100,
+                  display: "flex",
+                  flexDirection:"column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor:"pointer"
+                }}
+              >
+                <Typography variant="h6">{item.name}</Typography>
+              </Box>
+            </Link>
           );
         })}
       </Box>

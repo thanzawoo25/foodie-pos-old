@@ -12,6 +12,7 @@ import Logout from "../components/Logout";
 import PrivateRoute from "./PrivateRoute";
 import CreateMenu from "../components/CreateMenu";
 import Tables from "../components/Tables";
+import EditMenuCategories from "../components/EditMenuCategories";
 
 const Router = () => {
   return (
@@ -21,6 +22,7 @@ const Router = () => {
           <Route path="/" Component={App} />
           <Route path="/menus" Component={Menus} />
           <Route path="/menu-categories" Component={MenuCategories} />
+          <Route path="/menu-categories/:id" Component={EditMenuCategories} />
           <Route path="/create-menu" Component={CreateMenu} />
           <Route path="/addons" Component={Addons} />
           <Route path="/addon-categories" Component={AddonCategories} />
