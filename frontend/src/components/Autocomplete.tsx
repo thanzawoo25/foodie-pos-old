@@ -17,7 +17,7 @@ interface Props {
   defaultValue?: Option[];
   label: string;
   placeholder: string;
-  onChange: (options: Option) => void;
+  onChange: (options: Option[]) => void;
 }
 const Autocomplete = ({
   options,
@@ -32,10 +32,11 @@ const Autocomplete = ({
       options={options}
       defaultValue={defaultValue}
       disableCloseOnSelect
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      onChange={(evt, values) => onChange(values)}
       getOptionLabel={(option) => option.name}
-      onChange={(event, values) => console.log(values)}
       renderOption={(props, option, { selected }) => (
-        <li {...props}>
+        <li {...props} key={option.id}>
           <Checkbox
             icon={icon}
             checkedIcon={checkedIcon}
@@ -47,7 +48,7 @@ const Autocomplete = ({
       )}
       style={{ width: 500 }}
       renderInput={(params) => (
-        <TextField {...params} label="Checkboxes" placeholder="Favorites" />
+        <TextField {...params} label={label} placeholder={placeholder} />
       )}
     />
   );

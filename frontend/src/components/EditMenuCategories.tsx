@@ -3,16 +3,29 @@ import Layout from "../Layout";
 import { useParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
-import { getLocationByMenuCategoryId } from "../Utils";
+import {
+  getAccessToken,
+  getLocationByMenuCategoryId,
+  getMenusByMenuCategoryIds,
+} from "../Utils";
 import Autocomplete from "./Autocomplete";
+import { config } from "../config/config";
+import MenusCard from "./MenusCard";
 
 const EditMenuCategories = () => {
-  const { menuCategories, locations, menusMenuCategoriesLocations } =
+  const { menuCategories, menus, locations, menusMenuCategoriesLocations } =
     useContext(AppContext);
-  const [newMenuCategory, setNewMenuCategory] = useState({ name: "" });
   const params = useParams();
-  console.log("params", params);
+
   const menuCategoryId = params.id as string;
+
+  const [newMenuCategory, setNewMenuCategory] = useState({
+    id: menuCategoryId,
+    name: "",
+    locationIds: [] as number[],
+  });
+  const accessToken = getAccessToken();
+
   if (!menuCategoryId) return null;
   console.log("menuCategoryId", menuCategoryId);
 
@@ -28,6 +41,14 @@ const EditMenuCategories = () => {
         </Box>
       </Layout>
     );
+
+  const validMenus = getMenusByMenuCategoryIds(
+    menus,
+    menuCategoryId,
+    menusMenuCategoriesLocations
+  );
+
+  console.log("validMenus", validMenus);
 
   const validLocations = getLocationByMenuCategoryId(
     locations,
@@ -45,15 +66,22 @@ const EditMenuCategories = () => {
     name: item.name,
   }));
 
-  const updateMenuCategory = () => {
-    console.log("menuCategories", menuCategories);
-    console.log("setNewMenuCategory", newMenuCategory);
+  const updateMenuCategory = async () => {
+    await fetch(`${config.apiBaseUrl}/menu-categories`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newMenuCategory),
+    });
   };
 
   return (
     <Layout title="Edit Menu Categories">
       <Box sx={{ p: 5 }}>
         <TextField
+          sx={{ mb: 5 }}
           defaultValue={menuCategory.name}
           onChange={(event) =>
             setNewMenuCategory({ ...newMenuCategory, name: event.target.value })
@@ -64,12 +92,29 @@ const EditMenuCategories = () => {
           defaultValue={mappedValidLocations}
           label="Locations"
           placeholder="Locations"
-          onChange={() => {}}
+          onChange={(options) =>
+            setNewMenuCategory({
+              ...newMenuCategory,
+              locationIds: options.map((item) => item.id),
+            })
+          }
         />
-
-        <Button variant="contained" sx={{ mt: 5 }} onClick={updateMenuCategory}>
+        <Button
+          variant="contained"
+          sx={{ mt: 5, mb: 5 }}
+          onClick={updateMenuCategory}
+        >
           Update
         </Button>
+        <Box>
+          {validMenus.map((item) => {
+            return (
+              <Box key={item.id}>
+                <MenusCard menu={item} />
+              </Box>
+            );
+          })}
+        </Box>
       </Box>
     </Layout>
   );

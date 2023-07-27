@@ -84,3 +84,22 @@ export const getLocationByMenuCategoryId = (
     .map((item) => item.locations_id);
   return location.filter((item) => validLocationId.includes(item.id as number));
 };
+
+export const getMenusByMenuCategoryIds = (
+  menus: Menu[],
+  menuCategoryId: string,
+  menusMenuCategoriesLocations: MenusMenuCategoriesLocations[]
+) => {
+  const selectLocationId = getSelectedLocationId();
+
+  const validMenuIds = menusMenuCategoriesLocations
+    .filter(
+      (item) =>
+        item.menus_id &&
+        item.menu_categories_id === Number(menuCategoryId) &&
+        item.locations_id === Number(selectLocationId)
+    )
+    .map((item) => item.menus_id);
+  console.log("validMenuIds", validMenuIds);
+  return menus.filter((item) => validMenuIds.includes(item.id as number));
+};

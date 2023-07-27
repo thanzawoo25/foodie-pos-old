@@ -12,11 +12,13 @@ import Layout from "../Layout";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
 import Locations from "./Locations";
+import { getAccessToken } from "../Utils";
 
 const Settings = () => {
-  const { company, locations } = useContext(AppContext);
+  const { company, locations, fetchData } = useContext(AppContext);
   console.log("company", company);
   const [selectedLocationId, setSelectedLocationId] = useState<string>("");
+  const accessToken = getAccessToken();
 
   useEffect(() => {
     if (locations.length) {
@@ -36,6 +38,7 @@ const Settings = () => {
     setSelectedLocationId(locationId);
     localStorage.setItem("selectLocationId", locationId);
   };
+
   return (
     <Layout title="Settings">
       <Box sx={{ p: 5 }}>

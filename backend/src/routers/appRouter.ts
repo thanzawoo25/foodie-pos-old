@@ -30,7 +30,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     const locationIds = locations.rows.map((row) => row.id);
 
     const menusMenuCategoriesLocations = await db.query(
-      `select * from menus_menu_categories_locations where locations_id = ANY($1::int[])`,
+      `select * from menus_menu_categories_locations where is_archived = false and locations_id = ANY($1::int[])`,
       [locationIds]
     );
 
@@ -39,11 +39,12 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     const menuIds = menusMenuCategoriesLocations.rows.map(
       (row) => row.menus_id
     );
+    console.log(menuIds);
+
     const menus = await db.query(
-      `select * from menus where id = ANY($1::int[])`,
+      `select * from menus where id= ANY($1::int[])`,
       [menuIds]
     );
-    console.log(menuIds);
 
     //get menu categories ids and rows
 
@@ -52,7 +53,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     );
 
     const menuCategoriesResult = await db.query(
-      `select * from menu_categories where id = ANY($1::int[])`,
+      "select * from menu_categories where id = ANY($1::int[])",
       [menuCategoryIds]
     );
 

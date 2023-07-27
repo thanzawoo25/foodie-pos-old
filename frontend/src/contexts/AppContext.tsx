@@ -51,6 +51,7 @@ const AppProvider = (props: any) => {
       fetchData();
     }
   }, [accessToken]);
+  console.log("data", data);
 
   const fetchData = async () => {
     console.log(config);

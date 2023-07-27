@@ -36,14 +36,16 @@ const MenuCategories = () => {
                 sx={{
                   border: "2px solid lightgrey",
                   borderRadius: 3,
+                  borderWidth: 3,
+                  borderBlockColor: "black",
                   mr: 2,
                   height: 150,
                   width: 100,
                   display: "flex",
-                  flexDirection:"column",
+                  flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  cursor:"pointer"
+                  cursor: "pointer",
                 }}
               >
                 <Typography variant="h6">{item.name}</Typography>

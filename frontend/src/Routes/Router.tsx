@@ -10,9 +10,10 @@ import Register from "../components/Register";
 import Login from "../components/Login";
 import Logout from "../components/Logout";
 import PrivateRoute from "./PrivateRoute";
-import CreateMenu from "../components/CreateMenu";
+import CreateMenu from "../components/NewMenus";
 import Tables from "../components/Tables";
 import EditMenuCategories from "../components/EditMenuCategories";
+import NewMenus from "../components/NewMenus";
 
 const Router = () => {
   return (
@@ -23,7 +24,6 @@ const Router = () => {
           <Route path="/menus" Component={Menus} />
           <Route path="/menu-categories" Component={MenuCategories} />
           <Route path="/menu-categories/:id" Component={EditMenuCategories} />
-          <Route path="/create-menu" Component={CreateMenu} />
           <Route path="/addons" Component={Addons} />
           <Route path="/addon-categories" Component={AddonCategories} />
           <Route path="/tables" Component={Tables} />
