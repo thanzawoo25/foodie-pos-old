@@ -22,10 +22,18 @@ const Menus = () => {
 
   return (
     <Layout title="Menus">
-      <Box sx={{ ml: 5, mt: 5, display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{
+          ml: 5,
+          mt: 5,
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
         {validMenus.map((menu) => {
           return (
-            <Card key={menu.id} sx={{ maxWidth: 345, mr: 3 }}>
+            <Card key={menu.id} sx={{ maxWidth: 345, mr: 3, mb: 3 }}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -36,6 +44,9 @@ const Menus = () => {
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {menu.name}
+                  </Typography>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {menu.price}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     LThere are many variations of passages of Lorem Ipsum

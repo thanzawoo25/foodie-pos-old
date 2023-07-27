@@ -87,6 +87,7 @@ const EditMenuCategories = () => {
             setNewMenuCategory({ ...newMenuCategory, name: event.target.value })
           }
         />
+
         <Autocomplete
           options={mappedLocations}
           defaultValue={mappedValidLocations}
@@ -106,10 +107,10 @@ const EditMenuCategories = () => {
         >
           Update
         </Button>
-        <Box>
+        <Box sx={{ display: "flex" }}>
           {validMenus.map((item) => {
             return (
-              <Box key={item.id}>
+              <Box key={item.id} sx={{ mr: 3, mb: 3 }}>
                 <MenusCard menu={item} />
               </Box>
             );
