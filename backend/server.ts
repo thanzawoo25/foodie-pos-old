@@ -10,6 +10,7 @@ import appRouter from "./src/routers/appRouter";
 import locationsRouter from "./src/routers/locationsRouter";
 import tablesRouter from "./src/routers/tablesRouter";
 import menuCategoriesRouter from "./src/routers/menuCategoriesRouter";
+import addonsRouter from "./src/routers/addonsRouter";
 console.log(config.jwtSecret);
 
 //console.log(process.env)
@@ -25,6 +26,7 @@ app.use("/menus", menusRouter);
 app.use("/menu-categories", menuCategoriesRouter);
 app.use("/locations", locationsRouter);
 app.use("/tables", tablesRouter);
+app.use("/addons", addonsRouter);
 
 app.listen(port, () => {
   console.log("server is starting on port:", port);

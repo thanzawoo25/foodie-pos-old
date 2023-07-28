@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "../App";
 import Menus from "../components/Menus";
 import MenuCategories from "../components/MenuCategories";
-import Addons from "../components/Addons";
 import AddonCategories from "../components/AddonCategories";
 import Locations from "../components/Locations";
 import Settings from "../components/Settings";
@@ -10,10 +9,10 @@ import Register from "../components/Register";
 import Login from "../components/Login";
 import Logout from "../components/Logout";
 import PrivateRoute from "./PrivateRoute";
-import CreateMenu from "../components/NewMenus";
 import Tables from "../components/Tables";
 import EditMenuCategories from "../components/EditMenuCategories";
-import NewMenus from "../components/NewMenus";
+import Addons from "../components/Addons";
+import EditAddons from "../components/EditAddons";
 
 const Router = () => {
   return (
@@ -25,6 +24,7 @@ const Router = () => {
           <Route path="/menu-categories" Component={MenuCategories} />
           <Route path="/menu-categories/:id" Component={EditMenuCategories} />
           <Route path="/addons" Component={Addons} />
+          <Route path="/addons/:id" Component={EditAddons} />
           <Route path="/addon-categories" Component={AddonCategories} />
           <Route path="/tables" Component={Tables} />
           <Route path="/locations" Component={Locations} />

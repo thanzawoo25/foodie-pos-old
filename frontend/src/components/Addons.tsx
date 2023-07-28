@@ -1,13 +1,13 @@
-import NavBar from "./NavBar";
 import Layout from "../Layout";
-import { Box, Typography } from "@mui/material";
-import Autocomplete from "./Autocomplete";
+import { Box, Paper, Typography } from "@mui/material";
+
 import { useContext } from "react";
 import { AppContext } from "../contexts/AppContext";
 import {
   getAddonCategoryByLocationIds,
   getAddonsByLocationIds,
 } from "../Utils";
+import { Link } from "react-router-dom";
 
 const Addons = () => {
   const {
@@ -28,30 +28,39 @@ const Addons = () => {
     <Layout title="Addons">
       <Box
         sx={{
-          pl: 3,
-          pt: 5,
+          p: 3,
           display: "flex",
         }}
       >
-        {validAddons.map((item) => {
-          return (
-            <Box
-              key={item.id}
+        {validAddons.map((item) => (
+          <Link
+            key={item.id}
+            to={`/addons/${item.id}`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Paper
+              elevation={2}
               sx={{
-                border: "2px solid lightgrey",
-                borderRadius: 3,
-                mr: 2,
                 height: 150,
-                width: 100,
+                width: 150,
+                mr: 2,
+                mb: 2,
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                pl: 3,
+                pb: 3,
               }}
             >
-              <Typography>{item.name}</Typography>
-            </Box>
-          );
-        })}
+              <Typography sx={{ fontWeight: 700, color: "black" }}>
+                {item.name}
+              </Typography>
+              <Typography sx={{ fontSize: 14, color: "black" }}>
+                {item.price} kyats
+              </Typography>
+            </Paper>
+          </Link>
+        ))}
       </Box>
     </Layout>
   );

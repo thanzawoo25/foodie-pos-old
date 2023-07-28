@@ -50,10 +50,3 @@ const AddonCategories = () => {
 };
 
 export default AddonCategories;
-function getAddonCategoriesByLocationIds(
-  addonCategories: import("../typings/types").AddonCategory[],
-  menuAddonCategories: import("../typings/types").MenuAddonCategory[],
-  menusMenuCategoriesLocations: import("../typings/types").MenusMenuCategoriesLocations[]
-) {
-  throw new Error("Function not implemented.");
-}
