@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -11,8 +10,6 @@ import Layout from "../Layout";
 import { useContext, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
 import { getMenusByLocationIds } from "../Utils";
-import AddIcon from "@mui/icons-material/Add";
-import NewMenus from "./NewMenus";
 
 const Menus = () => {
   const { menus, menusMenuCategoriesLocations } = useContext(AppContext);
