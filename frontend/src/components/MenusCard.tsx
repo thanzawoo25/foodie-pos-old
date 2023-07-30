@@ -14,13 +14,22 @@ const MenusCard = ({ menu }: Props) => {
     >
       <Card sx={{ maxWidth: 345 }}>
         <CardMedia
-          sx={{ height: 140 }}
+          sx={{ height: 140, width: 400 }}
           image={menu.asset_url || ""}
           title="green iguana"
         />
-        <CardContent>
+        <CardContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            textAlign: "center",
+          }}
+        >
           <Typography gutterBottom variant="h5" component="div">
             {menu.name}
+          </Typography>
+          <Typography gutterBottom variant="h5" component="div">
+            {menu.price}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {menu.description}

@@ -1,21 +1,32 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import Layout from "../Layout";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
 import {
   getAccessToken,
   getLocationByMenuCategoryId,
   getMenusByMenuCategoryIds,
+  getSelectedLocationId,
 } from "../Utils";
 import Autocomplete from "./Autocomplete";
 import { config } from "../config/config";
 import MenusCard from "./MenusCard";
+import { ftruncate } from "fs";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteDialog from "./DeleteDialog";
+import { Menu } from "../typings/types";
 
 const EditMenuCategories = () => {
-  const { menuCategories, menus, locations, menusMenuCategoriesLocations } =
-    useContext(AppContext);
+  const {
+    menuCategories,
+    menus,
+    locations,
+    menusMenuCategoriesLocations,
+    fetchData,
+  } = useContext(AppContext);
   const params = useParams();
+  const navigate = useNavigate();
 
   const menuCategoryId = params.id as string;
 
@@ -25,6 +36,13 @@ const EditMenuCategories = () => {
     locationIds: [] as number[],
   });
   const accessToken = getAccessToken();
+  const [open, setOpen] = useState(false);
+  const [
+    selectedDeleteDialogMenuCategories,
+    setSelectedDeleteDialogMenuCategories,
+  ] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState<Menu>();
+  const selectedLocationId = getSelectedLocationId();
 
   if (!menuCategoryId) return null;
   console.log("menuCategoryId", menuCategoryId);
@@ -75,11 +93,24 @@ const EditMenuCategories = () => {
       },
       body: JSON.stringify(newMenuCategory),
     });
+    accessToken && fetchData();
+    navigate("/menu-categories");
   };
 
   return (
     <Layout title="Edit Menu Categories">
       <Box sx={{ p: 5 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            color="error"
+            variant="contained"
+            startIcon={<DeleteIcon />}
+            sx={{ mb: 3 }}
+            onClick={() => setSelectedDeleteDialogMenuCategories(true)}
+          >
+            Delete
+          </Button>
+        </Box>
         <TextField
           sx={{ mb: 5 }}
           defaultValue={menuCategory.name}
@@ -110,13 +141,47 @@ const EditMenuCategories = () => {
         <Box sx={{ display: "flex" }}>
           {validMenus.map((item) => {
             return (
-              <Box key={item.id} sx={{ mr: 3, mb: 3 }}>
+              <Box
+                key={item.id}
+                sx={{
+                  mr: 3,
+                  mb: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <MenusCard menu={item} />
+                <Button
+                  color="error"
+                  variant="contained"
+                  sx={{ mt: 2 }}
+                  onClick={() => {
+                    setOpen(true);
+                    setSelectedMenu(item);
+                  }}
+                >
+                  Remove
+                </Button>
               </Box>
             );
           })}
         </Box>
       </Box>
+      <DeleteDialog
+        title={
+          "Are you sure you want to removed this menu from the menu categories?"
+        }
+        open={open}
+        setOpen={setOpen}
+        callback={() => {}}
+      />
+      <DeleteDialog
+        title={"Are you sure you want to delete this  menu categories?"}
+        open={selectedDeleteDialogMenuCategories}
+        setOpen={setSelectedDeleteDialogMenuCategories}
+        callback={() => {}}
+      />
     </Layout>
   );
 };
