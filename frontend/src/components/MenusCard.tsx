@@ -12,9 +12,12 @@ const MenusCard = ({ menu }: Props) => {
       to={`/menus/${menu.id}`}
       style={{ textDecoration: "none", marginBottom: 3 }}
     >
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 300 }}>
         <CardMedia
-          sx={{ height: 140, width: 400 }}
+          sx={{
+            height: 140,
+            width: 300,
+          }}
           image={menu.asset_url || ""}
           title="green iguana"
         />

@@ -12,7 +12,7 @@ import {
 import Autocomplete from "./Autocomplete";
 import { config } from "../config/config";
 import MenusCard from "./MenusCard";
-import { ftruncate } from "fs";
+import { access, ftruncate } from "fs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "./DeleteDialog";
 import { Menu } from "../typings/types";
@@ -37,10 +37,8 @@ const EditMenuCategories = () => {
   });
   const accessToken = getAccessToken();
   const [open, setOpen] = useState(false);
-  const [
-    selectedDeleteDialogMenuCategories,
-    setSelectedDeleteDialogMenuCategories,
-  ] = useState(false);
+  const [openDeleteDialogMenuCategories, setOpenDeleteDialogMenuCategories] =
+    useState(false);
   const [selectedMenu, setSelectedMenu] = useState<Menu>();
   const selectedLocationId = getSelectedLocationId();
 
@@ -97,6 +95,38 @@ const EditMenuCategories = () => {
     navigate("/menu-categories");
   };
 
+  const handleRemovedMenusFromMenuCategories = async () => {
+    await fetch(`${config.apiBaseUrl}/menu-categories/removedMenu`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        menuId: selectedMenu?.id,
+        menuCategoryId,
+        locationId: selectedLocationId,
+      }),
+    });
+    accessToken && fetchData();
+    navigate("/menu-categories");
+  };
+
+  const handleDeleteMenuCategories = async () => {
+    await fetch(`${config.apiBaseUrl}/menu-categories/${menuCategoryId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        locationId: selectedLocationId,
+      }),
+    });
+    accessToken && fetchData();
+    navigate("/menu-categories");
+  };
+
   return (
     <Layout title="Edit Menu Categories">
       <Box sx={{ p: 5 }}>
@@ -106,7 +136,7 @@ const EditMenuCategories = () => {
             variant="contained"
             startIcon={<DeleteIcon />}
             sx={{ mb: 3 }}
-            onClick={() => setSelectedDeleteDialogMenuCategories(true)}
+            onClick={() => setOpenDeleteDialogMenuCategories(true)}
           >
             Delete
           </Button>
@@ -138,7 +168,7 @@ const EditMenuCategories = () => {
         >
           Update
         </Button>
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           {validMenus.map((item) => {
             return (
               <Box
@@ -174,13 +204,13 @@ const EditMenuCategories = () => {
         }
         open={open}
         setOpen={setOpen}
-        callback={() => {}}
+        callback={handleRemovedMenusFromMenuCategories}
       />
       <DeleteDialog
         title={"Are you sure you want to delete this  menu categories?"}
-        open={selectedDeleteDialogMenuCategories}
-        setOpen={setSelectedDeleteDialogMenuCategories}
-        callback={() => {}}
+        open={openDeleteDialogMenuCategories}
+        setOpen={setOpenDeleteDialogMenuCategories}
+        callback={handleDeleteMenuCategories}
       />
     </Layout>
   );
