@@ -22,7 +22,7 @@ addonsRouter.put(
   checkAuth,
   async (request: Request, response: Response) => {
     const addonId = request.params.id;
-    const isValid = addonId;
+    const isValid = addonId && request.body.name;
     if (!isValid) return response.send(400);
 
     const existingAddon = await db.query("select * from addons where id = $1", [
