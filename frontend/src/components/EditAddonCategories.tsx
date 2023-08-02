@@ -1,8 +1,14 @@
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Switch,
+  TextField,
+} from "@mui/material";
 import Layout from "../Layout";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getAccessToken } from "../Utils";
-import { Addon } from "../typings/types";
+import { Addon, AddonCategory } from "../typings/types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../contexts/AppContext";
@@ -13,29 +19,29 @@ import DeleteDialog from "./DeleteDialog";
 const EditAddonCategories = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const addonId = params.id as string;
-  const { addons, fetchData } = useContext(AppContext);
+  const addonCategoryId = params.id as string;
+  const { addonCategories, fetchData } = useContext(AppContext);
 
   const accessToken = getAccessToken();
   const [open, setOpen] = useState(false);
-  const [addon, setAddon] = useState<Addon>();
+  const [addonCategory, setAddonCategory] = useState<AddonCategory>();
 
-  const updateAddon = async () => {
-    if (!addon?.id) return;
-    await fetch(`${config.apiBaseUrl}/addons/${addonId}`, {
+  const updateAddonCategories = async () => {
+    if (!addonCategory?.id) return;
+    await fetch(`${config.apiBaseUrl}/addon-categories/${addonCategoryId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(addon),
+      body: JSON.stringify(addonCategory),
     });
     fetchData();
-    navigate("/addons");
+    navigate("/addon-categories");
   };
   const handleDeletedAddon = async () => {
-    if (!addon?.id) return;
-    await fetch(`${config.apiBaseUrl}/addons/${addonId}`, {
+    if (!addonCategory?.id) return;
+    await fetch(`${config.apiBaseUrl}/addon-categories/${addonCategoryId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -43,18 +49,20 @@ const EditAddonCategories = () => {
     });
     accessToken && fetchData();
     setOpen(false);
-    navigate("/addons");
+    navigate("/addon-categories");
   };
   useEffect(() => {
-    if (addons.length) {
-      const validAddon = addons.find((item) => item.id === Number(addonId));
-      setAddon(validAddon);
+    if (addonCategories.length) {
+      const validAddonCategory = addonCategories.find(
+        (item) => item.id === Number(addonCategoryId)
+      );
+      setAddonCategory(validAddonCategory);
     }
-  }, [addons]);
+  }, [addonCategories]);
 
-  if (!addon) return null;
+  if (!addonCategory) return null;
   return (
-    <Layout title="Edit Addons">
+    <Layout title="Edit AddonCategories">
       <Box sx={{ p: 5 }}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button
@@ -69,24 +77,31 @@ const EditAddonCategories = () => {
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <TextField
-            defaultValue={addon.name}
+            defaultValue={addonCategory.name}
             sx={{ mb: 3 }}
             onChange={(event) =>
-              setAddon({ ...addon, name: event.target.value })
+              setAddonCategory({ ...addonCategory, name: event.target.value })
             }
           />
-          <TextField
-            type="number"
-            defaultValue={addon.price}
-            sx={{ mb: 3 }}
-            onChange={(event) =>
-              setAddon({ ...addon, price: Number(event.target.value) })
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={addonCategory.is_required ? true : false}
+                onChange={(event) =>
+                  setAddonCategory({
+                    ...addonCategory,
+                    is_required: event.target.checked,
+                  })
+                }
+              />
             }
+            label="required"
           />
           <Button
             variant="contained"
-            sx={{ width: "fit-content" }}
-            onClick={updateAddon}
+            sx={{ width: "fit-content", mt: 5 }}
+            onClick={updateAddonCategories}
           >
             update
           </Button>
