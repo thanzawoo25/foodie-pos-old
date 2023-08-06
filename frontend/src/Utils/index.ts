@@ -1,9 +1,9 @@
 import {
   Addon,
   AddonCategory,
+  Location,
   Menu,
   MenuAddonCategory,
-  Location,
   MenuCategory,
   MenusMenuCategoriesLocations,
 } from "../typings/types";
@@ -84,7 +84,18 @@ export const getLocationByMenuCategoryId = (
     .map((item) => item.locations_id);
   return location.filter((item) => validLocationId.includes(item.id as number));
 };
-
+export const getAdddonCategoriesByMenuId = (
+  addonCategories: AddonCategory[],
+  menuAddonCategories: MenuAddonCategory[],
+  menuId: string
+) => {
+  const validAddonCategoryIds = menuAddonCategories
+    .filter((item) => item.menus_id === Number(menuId))
+    .map((item) => item.addon_categories_id);
+  return addonCategories.filter((item) =>
+    validAddonCategoryIds.includes(item.id as number)
+  );
+};
 export const getMenusByMenuCategoryIds = (
   menus: Menu[],
   menuCategoryId: string,

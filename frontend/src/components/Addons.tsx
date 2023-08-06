@@ -1,13 +1,13 @@
-import Layout from "../Layout";
 import { Box, Paper, Typography } from "@mui/material";
+import Layout from "../Layout";
 
 import { useContext } from "react";
-import { AppContext } from "../contexts/AppContext";
+import { Link } from "react-router-dom";
 import {
   getAddonCategoryByLocationIds,
   getAddonsByLocationIds,
 } from "../Utils";
-import { Link } from "react-router-dom";
+import { AppContext } from "../contexts/AppContext";
 
 const Addons = () => {
   const {
@@ -38,7 +38,7 @@ const Addons = () => {
           .map((item) => (
             <Link
               key={item.id}
-              to={`/addons/${item.id}`}
+              to={`${item.id}`}
               style={{ textDecoration: "none", color: "black" }}
             >
               <Paper

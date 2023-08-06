@@ -9,14 +9,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useContext, useState } from "react";
-import FileDropzone from "./FileDropzone";
-import { config } from "../config/config";
-import { AppContext } from "../contexts/AppContext";
-import Autocomplete from "./Autocomplete";
 import {
   getMenuCategoriesByLocationIds,
   getSelectedLocationId,
 } from "../Utils";
+import { config } from "../config/config";
+import { AppContext } from "../contexts/AppContext";
+import Autocomplete from "./Autocomplete";
+import FileDropzone from "./FileDropzone";
 console.log("Config", config);
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
   setOpen: (value: boolean) => void;
 }
 
-const NewMenus = ({ open, setOpen }: Props) => {
+const CreateMenus = ({ open, setOpen }: Props) => {
   const { menuCategories, menusMenuCategoriesLocations, fetchData } =
     useContext(AppContext);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -174,4 +174,4 @@ const NewMenus = ({ open, setOpen }: Props) => {
   );
 };
 
-export default NewMenus;
+export default CreateMenus;

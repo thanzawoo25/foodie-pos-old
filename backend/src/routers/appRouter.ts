@@ -1,7 +1,7 @@
-import express, { Request, Response, response } from "express";
-import { db } from "../db/db";
+import express, { Request, Response } from "express";
 import checkAuth from "../../utils/auth";
 import { fileUpload } from "../../utils/fileUpload";
+import { db } from "../db/db";
 const appRouter = express.Router();
 
 appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
@@ -42,7 +42,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     console.log(menuIds);
 
     const menus = await db.query(
-      `select * from menus where id= ANY($1::int[])`,
+      `select * from menus where id= ANY($1::int[]) and is_archived= false`,
       [menuIds]
     );
 

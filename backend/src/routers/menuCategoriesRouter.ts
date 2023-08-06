@@ -1,11 +1,11 @@
-import express, { Request, Response, response } from "express";
-import { db } from "../db/db";
+import express, { Request, Response } from "express";
 import checkAuth from "../../utils/auth";
+import { db } from "../db/db";
 const menuCategoriesRouter = express.Router();
 
 menuCategoriesRouter.put(
   "/",
-
+  checkAuth,
   async (request: Request, response: Response) => {
     const { id, name, locationIds } = request.body;
     if (!id) return response.send(400);
@@ -58,6 +58,7 @@ menuCategoriesRouter.put(
 
 menuCategoriesRouter.put(
   "/removedMenu",
+  checkAuth,
   async (request: Request, response: Response) => {
     const { menuId, menuCategoryId, locationId } = request.body;
     const isValid = menuId && menuCategoryId && locationId;
@@ -81,6 +82,7 @@ menuCategoriesRouter.put(
 
 menuCategoriesRouter.delete(
   "/:id",
+  checkAuth,
   async (request: Request, response: Response) => {
     const isValid = request.params.id && request.body.locationId;
     if (!isValid) return response.send(400);
@@ -101,6 +103,30 @@ menuCategoriesRouter.delete(
         [menusMenuCategoriesLocationsId]
       );
     });
+    response.send(200);
+  }
+);
+
+menuCategoriesRouter.post(
+  "/",
+  checkAuth,
+  async (request: Request, response: Response) => {
+    const { name, locationIds } = request.body;
+    const isValid = name && locationIds.length;
+    if (!isValid) return response.send(400);
+
+    const newMenuCategoryResult = await db.query(
+      "insert into menu_categories (name) values ($1) returning *",
+      [name]
+    );
+    const newMenuCategoryId = newMenuCategoryResult.rows[0].id;
+    locationIds.forEach(
+      async (item: number) =>
+        await db.query(
+          "insert into menus_menu_categories_locations (menu_categories_id,locations_id) values ($1,$2) returning *",
+          [newMenuCategoryId, item]
+        )
+    );
     response.send(200);
   }
 );
