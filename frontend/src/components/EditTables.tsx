@@ -53,7 +53,7 @@ const EditTables = () => {
 
   if (!table) return null;
   return (
-    <Layout title="Edit Addons">
+    <Layout title="Edit Tables">
       <Box sx={{ p: 5 }}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button

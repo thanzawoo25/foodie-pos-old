@@ -51,7 +51,7 @@ const EditLocations = () => {
       );
       setLocation(validLcation);
     }
-  }, [locations]);
+  }, [location]);
 
   if (!location) return null;
   return (

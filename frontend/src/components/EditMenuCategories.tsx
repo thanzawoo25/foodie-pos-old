@@ -142,11 +142,12 @@ const EditMenuCategories = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        menuCategoryId: Number(menuCategoryId),
+        menuCategoryId,
         menuId: selectedMenuIds,
-        locationIds: validLocationIds,
+        locationId: validLocationIds,
       }),
     });
+    accessToken && fetchData();
   };
 
   return (
