@@ -1,18 +1,11 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Typography,
-} from "@mui/material";
-import Layout from "../Layout";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { useContext, useState } from "react";
-import { config } from "../config/config";
+import { Link } from "react-router-dom";
+import Layout from "../Layout";
 import { getAccessToken, getSelectedLocationId } from "../Utils";
+import { config } from "../config/config";
 import { AppContext } from "../contexts/AppContext";
-import { isValidDateValue } from "@testing-library/user-event/dist/utils";
+import CreateTables from "./CreateTables";
 
 const Tables = () => {
   const { tables, fetchData } = useContext(AppContext);
@@ -42,7 +35,7 @@ const Tables = () => {
   };
   console.log("all tables", tables);
   return (
-    <Layout>
+    <Layout title="Tables">
       <Box sx={{ px: 5, pt: 5 }}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button variant="contained" onClick={() => setOpen(true)}>
@@ -56,49 +49,32 @@ const Tables = () => {
             justifyContent: "space-around",
           }}
         >
-          {isValidTables.map((table) => {
-            return (
-              <Box
+          {isValidTables.map((table) => (
+            <Link
+              to={`/tables/${table.id}`}
+              style={{ textDecoration: "none", color: "#000000" }}
+            >
+              <Paper
                 key={table.id}
                 sx={{
-                  height: 200,
-                  width: 200,
-                  border: "2px solid lightgrey",
-                  borderRadius: 5,
+                  height: 150,
+                  width: 150,
                   display: "flex",
                   justifyContent: "center",
-                  alignItems: "center",
+                  alignItems: "flex-end",
                   mt: 3,
                 }}
               >
                 <Typography>{table.name}</Typography>
-              </Box>
-            );
-          })}
+              </Paper>
+            </Link>
+          ))}
           {/* {isValidTables.map((table) => {
             return <h1 key={table.name}>{table.name}</h1>;
           })} */}
         </Box>
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle sx={{ display: "flex", justifyContent: "center" }}>
-            Create new tables
-          </DialogTitle>
-
-          <DialogContent sx={{ width: 400 }}>
-            <TextField
-              placeholder="Table name"
-              sx={{ width: "100%" }}
-              onChange={(event) => setNewTable(event.target.value)}
-            />
-
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-              <Button variant="contained" onClick={createNewTable}>
-                Create
-              </Button>
-            </Box>
-          </DialogContent>
-        </Dialog>
       </Box>
+      <CreateTables open={open} setOpen={setOpen} />
     </Layout>
   );
 };

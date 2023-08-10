@@ -80,6 +80,39 @@ menuCategoriesRouter.put(
   }
 );
 
+menuCategoriesRouter.put(
+  "/addedMenu",
+  checkAuth,
+  async (request: Request, response: Response) => {
+    const { menuId, menuCategoryId, locationId } = request.body;
+    const isValid = menuId && menuCategoryId.length && locationId.length;
+    if (!isValid) return response.send(400);
+
+    menuId.forEach((menuId: number) => {
+      locationId.forEach(async (locationId: number) => {
+        const menusMenuCategoriesLocations = await db.query(
+          "select * from menus_menu_categories_locations where menus_id=$1 and menu_categories_id =$2 and locations_id =$3",
+          [menuId, menuCategoryId, locationId]
+        );
+        const isExisted = menusMenuCategoriesLocations.rows.length;
+        if (isExisted) {
+          await db.query(
+            "update menus_menu_categories_locations set is_archived = false where menus_id=$1 and menu_categories_id =$2 and locations_id =$3",
+            [menuId, menuCategoryId, locationId]
+          );
+        } else {
+          await db.query(
+            "insert into menus_menu_categories_locations (menus_id,menu_categories_id,locations_id) values ($1,$2,$3)",
+            [menuId, menuCategoryId, locationId]
+          );
+        }
+      });
+    });
+
+    response.send(200);
+  }
+);
+
 menuCategoriesRouter.delete(
   "/:id",
   checkAuth,

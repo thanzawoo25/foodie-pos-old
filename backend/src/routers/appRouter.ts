@@ -24,7 +24,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
     //get locations rows and id
 
     const locations = await db.query(
-      `select * from locations where companies_id =$1`,
+      `select * from locations where is_archived = false and companies_id =$1`,
       [companyId]
     );
     const locationIds = locations.rows.map((row) => row.id);
@@ -85,7 +85,7 @@ appRouter.get("/", checkAuth, async (request: Request, response: Response) => {
 
     const company = companiesResult.rows[0];
     const tableResult = await db.query(
-      `select * from tables where locations_id = ANY($1::int[])`,
+      `select * from tables where is_archived = false and locations_id = ANY($1::int[])`,
       [locationIds]
     );
 

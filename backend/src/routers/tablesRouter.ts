@@ -1,9 +1,9 @@
-import express, { Request, Response, response } from "express";
-import { db } from "../db/db";
+import express, { Request, Response } from "express";
 import checkAuth from "../../utils/auth";
-const menusRouter = express.Router();
+import { db } from "../db/db";
+const tablesRouter = express.Router();
 
-menusRouter.get(
+tablesRouter.get(
   "/:locationId",
   checkAuth,
   async (request: Request, response: Response) => {
@@ -17,7 +17,7 @@ menusRouter.get(
   }
 );
 
-menusRouter.post(
+tablesRouter.post(
   "/",
   checkAuth,
   async (request: Request, response: Response) => {
@@ -32,5 +32,45 @@ menusRouter.post(
     //response.send(tableResult.rows);
   }
 );
+tablesRouter.put(
+  "/:id",
+  checkAuth,
+  async (request: Request, response: Response) => {
+    const tableId = request.params.id;
+    const { name } = request.body;
+    const isValid = name && tableId;
+    if (!isValid) return response.send(400);
 
-export default menusRouter;
+    const existingTable = await db.query("select * from tables where id = $1", [
+      tableId,
+    ]);
+    const hasExistingTable = existingTable.rows.length > 0;
+    if (!hasExistingTable) return response.send(400);
+    await db.query("update tables set name = $1  where id = $2", [
+      name,
+      tableId,
+    ]);
+    response.send(200);
+  }
+);
+
+tablesRouter.delete(
+  "/:id",
+  checkAuth,
+  async (request: Request, response: Response) => {
+    const tableId = request.params.id;
+    if (!tableId) return response.send(400);
+    const existingTable = await db.query("select * from tables where id = $1", [
+      tableId,
+    ]);
+    const hasExistingTable = existingTable.rows.length;
+    if (!hasExistingTable) return response.send(400);
+
+    await db.query("update tables set is_archived = true where id = $1", [
+      tableId,
+    ]);
+    response.send(200);
+  }
+);
+
+export default tablesRouter;

@@ -1,21 +1,20 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import Layout from "../Layout";
-import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
-import { AppContext } from "../contexts/AppContext";
+import { useNavigate, useParams } from "react-router-dom";
+import Layout from "../Layout";
 import {
   getAccessToken,
   getLocationByMenuCategoryId,
   getMenusByMenuCategoryIds,
   getSelectedLocationId,
 } from "../Utils";
-import Autocomplete from "./Autocomplete";
 import { config } from "../config/config";
-import MenusCard from "./MenusCard";
-import { access, ftruncate } from "fs";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteDialog from "./DeleteDialog";
+import { AppContext } from "../contexts/AppContext";
 import { Menu } from "../typings/types";
+import Autocomplete from "./Autocomplete";
+import DeleteDialog from "./DeleteDialog";
+import MenusCard from "./MenusCard";
 
 const EditMenuCategories = () => {
   const {
@@ -41,9 +40,9 @@ const EditMenuCategories = () => {
     useState(false);
   const [selectedMenu, setSelectedMenu] = useState<Menu>();
   const selectedLocationId = getSelectedLocationId();
+  const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
 
   if (!menuCategoryId) return null;
-  console.log("menuCategoryId", menuCategoryId);
 
   const menuCategory = menuCategories.find(
     (item) => item.id === Number(menuCategoryId)
@@ -63,6 +62,7 @@ const EditMenuCategories = () => {
     menuCategoryId,
     menusMenuCategoriesLocations
   );
+  const validMenuIds = validMenus.map((item) => item.id);
 
   console.log("validMenus", validMenus);
 
@@ -71,6 +71,7 @@ const EditMenuCategories = () => {
     menuCategoryId,
     menusMenuCategoriesLocations
   );
+  const validLocationIds = validLocations.map((item) => item.id);
 
   const mappedLocations = locations.map((item) => ({
     id: item.id as number,
@@ -126,6 +127,27 @@ const EditMenuCategories = () => {
     accessToken && fetchData();
     navigate("/menu-categories");
   };
+  const mappedMenus = menus
+    .map((item) => ({
+      id: item.id as number,
+      name: `${item.name}-${item.id}`,
+    }))
+    .filter((item) => !validMenuIds.includes(item.id));
+
+  const handleAddedMenuToMenuCategories = async () => {
+    await fetch(`${config.apiBaseUrl}/menu-categories/addedMenu`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        menuCategoryId: Number(menuCategoryId),
+        menuId: selectedMenuIds,
+        locationIds: validLocationIds,
+      }),
+    });
+  };
 
   return (
     <Layout title="Edit Menu Categories">
@@ -168,6 +190,25 @@ const EditMenuCategories = () => {
         >
           Update
         </Button>
+
+        <Box sx={{ mb: 3 }}>
+          <Typography sx={{ fontSize: "28px", mb: 3 }}>Menus</Typography>
+          <Autocomplete
+            options={mappedMenus}
+            label="Menus"
+            placeholder="Menus"
+            onChange={(options) =>
+              setSelectedMenuIds(options.map((item) => item.id))
+            }
+          />
+          <Button
+            variant="contained"
+            sx={{ mt: 3 }}
+            onClick={handleAddedMenuToMenuCategories}
+          >
+            Add
+          </Button>
+        </Box>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           {validMenus.map((item) => {
             return (

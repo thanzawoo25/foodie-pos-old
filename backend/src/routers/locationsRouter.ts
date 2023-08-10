@@ -1,6 +1,6 @@
-import express, { Request, Response, response } from "express";
-import { db } from "../db/db";
+import express, { Request, Response } from "express";
 import checkAuth from "../../utils/auth";
+import { db } from "../db/db";
 const locationsRouter = express.Router();
 
 locationsRouter.put(
@@ -31,10 +31,10 @@ locationsRouter.post(
 );
 
 locationsRouter.put(
-  "/:locationId",
+  "/:id",
   checkAuth,
   async (request: Request, response: Response) => {
-    const locationId = request.params.locationId;
+    const locationId = request.params.id;
     const { name, address } = request.body;
 
     if (name && !address) {
@@ -59,22 +59,21 @@ locationsRouter.put(
   }
 );
 locationsRouter.delete(
-  "/:locationId",
+  "/:id",
   checkAuth,
   async (request: Request, response: Response) => {
-    const locationId = request.params.locationId;
+    const locationId = request.params.id;
     if (!locationId) return response.send(400);
-    try {
-      await db.query(
-        "DELETE from menus_menu_categories_locations where locations_id=$1",
-        [locationId]
-      );
-      await db.query("DELETE from locations where id=$1", [locationId]);
-      response.send(200);
-    } catch (error) {
-      console.log("error", error);
-      response.send(500);
-    }
+    const existingLocations = await db.query(
+      "select * from locations where id = $1 ",
+      [locationId]
+    );
+    const hasExistingLocation = existingLocations.rows.length;
+    if (!hasExistingLocation) return response.send(400);
+    await db.query("update locations set is_archived = true where id =$1", [
+      locationId,
+    ]);
+    response.send(200);
   }
 );
 export default locationsRouter;

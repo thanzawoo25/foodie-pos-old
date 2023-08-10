@@ -4,8 +4,10 @@ import AddonCategories from "../components/AddonCategories";
 import Addons from "../components/Addons";
 import EditAddonCategories from "../components/EditAddonCategories";
 import EditAddons from "../components/EditAddons";
+import EditLocations from "../components/EditLocations";
 import EditMenuCategories from "../components/EditMenuCategories";
 import EditMenus from "../components/EditMenus";
+import EditTables from "../components/EditTables";
 import Locations from "../components/Locations";
 import Login from "../components/Login";
 import Logout from "../components/Logout";
@@ -31,7 +33,9 @@ const Router = () => {
           <Route path="/addon-categories" Component={AddonCategories} />
           <Route path="/addon-categories/:id" Component={EditAddonCategories} />
           <Route path="/tables" Component={Tables} />
+          <Route path="/tables/:id" Component={EditTables} />
           <Route path="/locations" Component={Locations} />
+          <Route path="/locations/:id" Component={EditLocations} />
           <Route path="/settings" Component={Settings} />
         </Route>
         <Route path="/login" Component={Login} />
